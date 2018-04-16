@@ -51,11 +51,29 @@ ponto_x = [ponto_mais_proximo(ponto_x, ponto_x_rhessi)]
 ponto_y = ponto_y[0]
 ponto_x = ponto_x[0]
 
-print(ponto_x)
-print(ponto_y)
+a = []
+for data in ar_data['result']:
+    a.append(str(data['hgs_coord'])[5:].replace(' ', ','))
 
 for data in ar_data['result']:
-    print(data['hgs_coord'])
+    print(data['hgc_x'])
 
-for i in ar_data['result']:
-    print(i['hgs_coord'])
+b = []
+for x in a:
+    b.append(x.split(','))
+
+x = []
+y = []
+for i in b:
+    x.append(float(i[0].replace('(', '')))
+
+for i in b:
+    y.append(float(i[1].replace(')', '')))
+
+print(ponto_x)
+print(ponto_y)
+ppx = ponto_mais_proximo(y, ponto_y)
+ppy = ponto_mais_proximo(x, ponto_x)
+
+print(ppx)
+print(ppy)
