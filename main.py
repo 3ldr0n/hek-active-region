@@ -28,6 +28,7 @@ fl_data = fl_req.json()
 for piece_of_data in fl_data['result']:
     if piece_of_data['search_instrument'] == "RHESSI":
         posicao_rhessi = 'RHESSI ', piece_of_data['hgc_coord']
+        rhessi_coord = piece_of_data['hgs_coord']
 
         ponto_x_rhessi = float(posicao_rhessi[1][6:16])
         ponto_y_rhessi = float(posicao_rhessi[1][17:24])
@@ -51,29 +52,38 @@ ponto_x = [ponto_mais_proximo(ponto_x, ponto_x_rhessi)]
 ponto_y = ponto_y[0]
 ponto_x = ponto_x[0]
 
-a = []
-for data in ar_data['result']:
-    a.append(str(data['hgs_coord'])[5:].replace(' ', ','))
+print("Ponto x: {}\nPonto y: {}".format(ponto_x, ponto_y))
+print("Ponto x RHESSI: {}\nPonto y RHESSI: {}".format(ponto_x_rhessi, ponto_y_rhessi))
 
-for data in ar_data['result']:
-    print(data['hgc_x'])
+diferenca_x_rhessi = abs(ponto_x - ponto_x_rhessi)
+diferenca_y_rhessi = abs(ponto_y - ponto_y_rhessi)
 
-b = []
-for x in a:
-    b.append(x.split(','))
+print("Diferença x: ", diferenca_x_rhessi)
+print("Diferença y: ", diferenca_y_rhessi)
+
+if diferenca_x_rhessi < diferenca_y_rhessi:
+    for i in ar_data['result']:
+        if i['hgc_x'] == ponto_x:
+            regiao_ativa = i['hgc_coord']
+else:
+    for i in ar_data['result']:
+        if i['hgc_y'] == ponto_y:
+            regiao_ativa = i['hgs_coord']
+
+print("Região Ativa: {}".format(regiao_ativa))
+
+hgs_coord = []
+for data in ar_data['result']:
+    hgs_coord.append(str(data['hgs_coord'])[5:].replace(' ', ','))
+
+coords = []
+for coord in hgs_coord:
+    coords.append(coord.split(','))
 
 x = []
 y = []
-for i in b:
-    x.append(float(i[0].replace('(', '')))
+for xaxis in coords:
+    x.append(float(xaxis[0].replace('(', '')))
 
-for i in b:
-    y.append(float(i[1].replace(')', '')))
-
-print(ponto_x)
-print(ponto_y)
-ppx = ponto_mais_proximo(y, ponto_y)
-ppy = ponto_mais_proximo(x, ponto_x)
-
-print(ppx)
-print(ppy)
+for yaxis in coords:
+    y.append(float(yaxis[1].replace(')', '')))
