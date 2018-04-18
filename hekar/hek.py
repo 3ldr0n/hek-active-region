@@ -37,7 +37,7 @@ class HEK:
         return url
 
 
-    def get_rhessi_points(self):
+    def __get_rhessi_points(self):
         fl_url = self.__get_url("fl")
         fl_req = requests.get(fl_url)
         fl_data = fl_req.json()
@@ -77,6 +77,7 @@ class HEK:
 
 
     def get_active_region(self):
+        self.__get_rhessi_points()
         self._compare_rhessi_points()
 
         diferenca_x_rhessi = abs(self._ponto_x - self._x_rhessi)
