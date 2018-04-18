@@ -1,25 +1,35 @@
 import requests
 import time
 
-def ponto_mais_proximo(lista, numero):
-    """
-    Essa funcao pega o número mais próximo, de um certo número dentro
-    de uma lista.
-    """
-    return min(lista, key=lambda n: abs(n - (numero)))
-
 event_starttime = '2002-04-09T12:45:00'
 event_endtime = '2002-04-09T13:05:00'
 event_type = 'fl'
 
-def get_url(event_starttime, event_endtime, event_type):
-    url = "http://www.lmsal.com/hek/her?"
-    url += "cmd=search&type=column&event_type={}".format(event_type)
-    url += "&event_starttime={}".format(event_starttime)
-    url += "&event_endtime={}".format(event_endtime)
-    url += "&event_coordsys=helioprojective&x1=-1200&x2=1200&y1=-1200&y2=1200"
-    url += "&cosec=2"
-    return url
+class HEK:
+
+    def __init__(self, event_starttime, event_endtime, event_type):
+        self._event_starttime = event_starttime
+        self._event_endtime = event_endtime
+        self._event_type = event_tpe
+
+
+    def __nearest_point(self, lista, numero):
+        """
+        Essa funcao pega o número mais próximo, de um certo número dentro
+        de uma lista.
+        """
+        return min(lista, key=lambda n: abs(n - (numero)))
+
+
+    def __get_url(self):
+        url = "http://www.lmsal.com/hek/her?"
+        url += "cmd=search&type=column&event_type={}".format(self.event_type)
+        url += "&event_starttime={}".format(self.event_starttime)
+        url += "&event_endtime={}".format(self.event_endtime)
+        url += "&event_coordsys=helioprojective"
+        url += "&x1=-1200&x2=1200&y1=-1200&y2=1200"
+        url += "&cosec=2"
+        return url
 
 fl_url = get_url(event_starttime, event_endtime, event_type)
 fl_req = requests.get(fl_url)
@@ -48,8 +58,8 @@ for data in ar_data['result']:
 
 # Pegas os pontos mais próximos, analisando todos os pontos dentro da lista,
 # e comparando com os dados pegos do rhessi.
-ponto_y = [ponto_mais_proximo(ponto_y, ponto_y_rhessi)]
-ponto_x = [ponto_mais_proximo(ponto_x, ponto_x_rhessi)]
+ponto_y = [nearest_point(ponto_y, ponto_y_rhessi)]
+ponto_x = [nearest_point(ponto_x, ponto_x_rhessi)]
 
 ponto_y = ponto_y[0]
 ponto_x = ponto_x[0]
