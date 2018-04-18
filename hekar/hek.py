@@ -3,6 +3,16 @@ import time
 
 class HEK:
 
+    """
+    event_starttime = '2002-04-09T12:45:00'
+    event_endtime = '2002-04-09T13:05:00'
+
+    hek = HEK(event_starttime, event_endtime)
+    hek.get_rhessi_points()
+    ar = hek.get_active_region()
+    print("\n{}\n".format(ar))
+    """
+
     def __init__(self, event_starttime, event_endtime):
         self._event_starttime = event_starttime
         self._event_endtime = event_endtime
@@ -86,14 +96,3 @@ class HEK:
 
         print("Região Ativa: {}".format(self.active_region))
         return self.active_region
-
-
-"""
-event_starttime = '2002-04-09T12:45:00'
-event_endtime = '2002-04-09T13:05:00'
-
-hek = HEK(event_starttime, event_endtime)
-hek.get_rhessi_points()
-ar = hek.get_active_region()
-print("\n{}\n".format(ar))
-"""
