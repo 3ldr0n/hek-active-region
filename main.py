@@ -39,10 +39,12 @@ ar_data = ar_req.json()
 
 ponto_x = []
 ponto_y = []
+hgs_coords = []
 
 for data in ar_data['result']:
     ponto_x.append(data['hgc_x'])
     ponto_y.append(data['hgc_y'])
+    hgs_coords.append(data['hgs_coord'])
 
 # Pegas os pontos mais próximos, analisando todos os pontos dentro da lista,
 # e comparando com os dados pegos do rhessi.
@@ -62,28 +64,28 @@ print("Diferença x: ", diferenca_x_rhessi)
 print("Diferença y: ", diferenca_y_rhessi)
 
 if diferenca_x_rhessi < diferenca_y_rhessi:
-    for i in ar_data['result']:
-        if i['hgc_x'] == ponto_x:
-            regiao_ativa = i['hgc_coord']
+    for ar_result in ar_data['result']:
+        if ar_result['hgc_x'] == ponto_x:
+            regiao_ativa = ar_result['hgs_coord']
 else:
-    for i in ar_data['result']:
-        if i['hgc_y'] == ponto_y:
-            regiao_ativa = i['hgs_coord']
+    for ar_result in ar_data['result']:
+        if ar_result['hgc_y'] == ponto_y:
+            regiao_ativa = ar_result['hgs_coord']
 
 print("Região Ativa: {}".format(regiao_ativa))
 
-hgs_coord = []
-for data in ar_data['result']:
-    hgs_coord.append(str(data['hgs_coord'])[5:].replace(' ', ','))
-
-coords = []
-for coord in hgs_coord:
-    coords.append(coord.split(','))
-
-x = []
-y = []
-for xaxis in coords:
-    x.append(float(xaxis[0].replace('(', '')))
-
-for yaxis in coords:
-    y.append(float(yaxis[1].replace(')', '')))
+#hgs_coord = []
+#for data in ar_data['result']:
+#    hgs_coord.append(str(data['hgs_coord'])[5:].replace(' ', ','))
+#
+#coords = []
+#for coord in hgs_coord:
+#    coords.append(coord.split(','))
+#
+#x = []
+#y = []
+#for xaxis in coords:
+#    x.append(float(xaxis[0].replace('(', '')))
+#
+#for yaxis in coords:
+#    y.append(float(yaxis[1].replace(')', '')))
