@@ -1,7 +1,7 @@
 # Hekar
 Tries to get active region of a flare using hek's api
 
-```
+```python
 from hekar import HEK
 
 event_stattime = "2002-04-09T12:45:00"
