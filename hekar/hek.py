@@ -6,10 +6,17 @@ class HEK:
     """
 
     Attributes:
+        _event_starttime:
+        _event_endtime:
+        _x_point
+        _y_point
+        _x_rhessi
+        _y_rhessi
+
 
     Args:
-        event_starttime:
-        event_endtime
+        _event_starttime:
+        _event_endtime
     """
 
     def __init__(self, event_starttime, event_endtime):
@@ -46,13 +53,15 @@ class HEK:
 
         for fl_result in fl_data['result']:
             if fl_result['search_instrument'] == "RHESSI":
-                rhessi_position = 'RHESSI ', fl_result['hgc_coord']
-                rhessi_coord = fl_result['hgs_coord']
+                position = 'RHESSI ', fl_result['hgc_coord']
 
-                self._x_rhessi = float(rhessi_position[1][6:16])
-                self._y_rhessi = float(rhessi_position[1][17:24])
+                self._x_rhessi = float(position[1][6:16])
+                self._y_rhessi = float(position[1][17:24])
 
-        return self._x_rhessi, self._y_rhessi
+        try:
+            return self._x_rhessi, self._y_rhessi
+        except AttributeError:
+            return False
 
 
     def __compare_rhessi_points(self):
@@ -74,7 +83,10 @@ class HEK:
 
 
     def get_active_region(self):
-        self.__get_rhessi_points()
+        if not self.__get_rhessi_points():
+            print("No rhessi data")
+            return "no_rhessi_data"
+
         self.__compare_rhessi_points()
 
         rhessi_x_diference = abs(self._x_point - self._x_rhessi)
@@ -89,4 +101,5 @@ class HEK:
                 if ar_result['hgc_y'] == self._y_point:
                     self.active_region = ar_result['hgs_coord']
 
-        return self.active_region
+        return self.active_region[5:].replace(' ', ',')
+
