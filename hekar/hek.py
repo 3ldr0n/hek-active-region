@@ -4,13 +4,12 @@ import time
 class HEK:
 
     """
-    event_starttime = '2002-04-09T12:45:00'
-    event_endtime = '2002-04-09T13:05:00'
 
-    hek = HEK(event_starttime, event_endtime)
-    hek.get_rhessi_points()
-    ar = hek.get_active_region()
-    print("\n{}\n".format(ar))
+    Attributes:
+
+    Args:
+        event_starttime:
+        event_endtime
     """
 
     def __init__(self, event_starttime, event_endtime):
@@ -18,15 +17,18 @@ class HEK:
         self._event_endtime = event_endtime
 
 
-    def __nearest_point(self, lista, numero):
+    def __nearest_point(self, _list, number):
         """
-        Essa funcao pega o número mais próximo, de um certo número dentro
-        de uma lista.
+        Takes the nearest number inside a list, of a given number.
         """
-        return min(lista, key=lambda n: abs(n - (numero)))
+        return min(_list, key=lambda n: abs(n - (number)))
 
 
     def __get_url(self, event_type):
+        if event_type != "fl" and event_type != "ar":
+            print("Invalid event type")
+            return False
+
         url = "http://www.lmsal.com/hek/her?"
         url += "cmd=search&type=column&event_type={}".format(event_type)
         url += "&event_starttime={}".format(self._event_starttime)
@@ -53,47 +55,38 @@ class HEK:
         return self._x_rhessi, self._y_rhessi
 
 
-    def _compare_rhessi_points(self):
+    def __compare_rhessi_points(self):
         ar_url = self.__get_url("ar")
         ar_req = requests.get(ar_url)
         self.ar_data = ar_req.json()
 
-        ponto_x = []
-        ponto_y = []
+        x_points = []
+        y_points = []
 
         for ar_result in self.ar_data['result']:
-            ponto_x.append(ar_result['hgc_x'])
-            ponto_y.append(ar_result['hgc_y'])
+            x_points.append(ar_result['hgc_x'])
+            y_points.append(ar_result['hgc_y'])
 
         # Pegas os pontos mais próximos, analisando todos os pontos dentro da lista,
         # e comparando com os dados pegos do rhessi.
-        self._ponto_y = self.__nearest_point(ponto_y, self._y_rhessi)
-        self._ponto_x = self.__nearest_point(ponto_x, self._x_rhessi)
-
-
-        print("Ponto x: {}\nPonto y: {}".format(self._ponto_x, self._ponto_y))
-        print("Ponto x RHESSI: {}\nPonto y RHESSI: {}"
-                                .format(self._x_rhessi, self._y_rhessi))
+        self._y_point = self.__nearest_point(y_points, self._y_rhessi)
+        self._x_point = self.__nearest_point(x_points, self._x_rhessi)
 
 
     def get_active_region(self):
         self.__get_rhessi_points()
-        self._compare_rhessi_points()
+        self.__compare_rhessi_points()
 
-        diferenca_x_rhessi = abs(self._ponto_x - self._x_rhessi)
-        diferenca_y_rhessi = abs(self._ponto_y - self._y_rhessi)
+        rhessi_x_diference= abs(self._x_point - self._x_rhessi)
+        rhessi_y_diference = abs(self._y_point - self._y_rhessi)
 
-        print("Diferença x: ", diferenca_x_rhessi)
-        print("Diferença y: ", diferenca_y_rhessi)
-
-        if diferenca_x_rhessi < diferenca_y_rhessi:
+        if rhessi_x_diference < rhessi_y_diference:
             for ar_result in self.ar_data['result']:
-                if ar_result['hgc_x'] == self._ponto_x:
+                if ar_result['hgc_x'] == self._x_point:
                     self.active_region = ar_result['hgs_coord']
         else:
             for ar_result in self.ar_data['result']:
-                if ar_result['hgc_y'] == self._ponto_y:
+                if ar_result['hgc_y'] == self._y_point:
                     self.active_region = ar_result['hgs_coord']
 
-        print("Região Ativa: {}".format(self.active_region))
         return self.active_region
