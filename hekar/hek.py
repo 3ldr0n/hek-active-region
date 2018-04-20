@@ -77,7 +77,7 @@ class HEK:
         self.__get_rhessi_points()
         self.__compare_rhessi_points()
 
-        rhessi_x_diference= abs(self._x_point - self._x_rhessi)
+        rhessi_x_diference = abs(self._x_point - self._x_rhessi)
         rhessi_y_diference = abs(self._y_point - self._y_rhessi)
 
         if rhessi_x_diference < rhessi_y_diference:
