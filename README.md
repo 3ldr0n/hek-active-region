@@ -1,6 +1,7 @@
 # Hekar
 Tries to get active region of a flare using hek's api.
-NOTE: This is a very specific library, it just tries to compare data gotten from RHESSI, if that's not what you need, don't use it. But, feel free to make the changes you need.
+
+**_NOTE_**: This is a very specific library, it just tries to compare data gotten from RHESSI, if that's not what you need, don't use it. But, feel free to make the changes you need.
 
 ```python
 from hekar import HEK
