@@ -1,35 +1,17 @@
 import requests
-import time
+
 
 class HEK:
-
-    """
-
-    Attributes:
-        _event_starttime:
-        _event_endtime:
-        _x_point
-        _y_point
-        _x_rhessi
-        _y_rhessi
-
-
-    Args:
-        _event_starttime:
-        _event_endtime
-    """
 
     def __init__(self, event_starttime, event_endtime):
         self._event_starttime = event_starttime
         self._event_endtime = event_endtime
-
 
     def __nearest_point(self, _list, number):
         """
         Takes the nearest number inside a list, of a given number.
         """
         return min(_list, key=lambda n: abs(n - (number)))
-
 
     def __get_url(self, event_type):
         if event_type != "fl" and event_type != "ar":
@@ -44,7 +26,6 @@ class HEK:
         url += "&x1=-1200&x2=1200&y1=-1200&y2=1200"
         url += "&cosec=2"
         return url
-
 
     def __get_rhessi_points(self):
         fl_url = self.__get_url("fl")
@@ -63,7 +44,6 @@ class HEK:
         except AttributeError:
             return False
 
-
     def __compare_rhessi_points(self):
         ar_url = self.__get_url("ar")
         ar_req = requests.get(ar_url)
@@ -76,13 +56,15 @@ class HEK:
             x_points.append(ar_result['hgc_x'])
             y_points.append(ar_result['hgc_y'])
 
-        # Pegas os pontos mais próximos, analisando todos os pontos dentro da lista,
-        # e comparando com os dados pegos do rhessi.
+        # Pegas os pontos mais próximos, analisando todos os pontos dentro
+        # da lista, e comparando com os dados pegos do rhessi.
         self._y_point = self.__nearest_point(y_points, self._y_rhessi)
         self._x_point = self.__nearest_point(x_points, self._x_rhessi)
 
-
     def get_active_region(self):
+        """
+        Returns the active region as a string.
+        """
         if not self.__get_rhessi_points():
             print("No rhessi data")
             return "no_rhessi_data"
@@ -102,4 +84,3 @@ class HEK:
                     self.active_region = ar_result['hgs_coord']
 
         return self.active_region[5:].replace(' ', ',')
-
